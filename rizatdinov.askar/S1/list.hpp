@@ -3,58 +3,57 @@
 
 namespace rizatdinov
 {
-  template< class elem > 
+  template< class Elem >
   struct Link
   {
-    elem val;
+    Elem val;
     Link* succ;
   };
-
+  template< class Elem > class List;
   template< class Elem >
-  class Iterator
-  {
-    Link<Elem>* curr;
+  class LIter {
+    friend class List< Elem >;
+
+    Link< Elem >* curr;
   public:
-    template<class> friend class List;
+    LIter(Link< Elem >* p) :curr(p) {}
 
-    Iterator(Link<Elem>* p) :curr(p) {}
-
-    Iterator& operator++() { curr = curr->succ; return *this; }
-    Elem& operator*() const { return curr->val; }
-    bool operator==(const  Iterator& b) const { return curr == b.curr; }
-    bool operator!=(const Iterator& b) const { return curr != b.curr; }
+    LIter& operator++() { curr = curr->succ; return *this; }
+    Elem& operator*() { return curr->val; }
+    bool operator==(const LIter& b) const { return curr == b.curr; }
+    bool operator!=(const LIter& b) const { return curr != b.curr; }
   };
-
   template< class Elem >
-  class ConstIterator
-  {
-    const Link<Elem>* curr;
+  class LCIter {
+    friend class List< Elem >;
+
+    const Link< Elem >* curr;
   public:
-    template<class> friend class List;
+    LCIter(const Link< Elem >* p): curr(p) {}
 
-    ConstIterator(const Link<Elem>* p) :curr(p) {}
-
-    ConstIterator& operator++() { curr = curr->succ; return *this; }
+    LCIter& operator++() { curr = curr->succ; return *this; }
     const Elem& operator*() const { return curr->val; }
-    bool operator==(const  ConstIterator& b) const { return curr == b.curr; }
-    bool operator!=(const ConstIterator& b) const { return curr != b.curr; }
+    bool operator==(const LCIter& b) const { return curr == b.curr; }
+    bool operator!=(const LCIter& b) const { return curr != b.curr; }
   };
-
   template< class Elem >
-  class List
-  {
-    Link<Elem>* fake;
+  class List {
+    Link< Elem >* fake;
   public:
+    using iterator = LIter< Elem >;
+    using const_iterator = LCIter< Elem >;
+
     List();
     List(const List& other);
-    List(List&& list) noexcept;
+    List(List&& other) noexcept;
     ~List();
-
-    using iterator = Iterator<Elem>;
-    using const_iterator = ConstIterator<Elem>;
 
     List& operator=(const List& other);
     List& operator=(List&& other) noexcept;
+
+    iterator before_begin();
+    const_iterator before_begin() const;
+    const_iterator cbefore_begin() const;
 
     iterator begin();
     const_iterator begin() const;
@@ -74,22 +73,26 @@ namespace rizatdinov
   };
 
   template< class Elem >
-  List<Elem>::List() {
-    fake = new Link<Elem>;
+  List< Elem >::List() {
+    fake = new Link< Elem >;
     fake->succ = nullptr;
   }
 
   template< class Elem >
-  List<Elem>::List(const List& other) {
-    fake = new Link<Elem>;
+  List< Elem >::List(const List& other) {
+    fake = new Link< Elem >;
     fake->succ = nullptr;
-    *this = other;
+    iterator ptr = iterator(fake);
+    for (const_iterator bpr = other.begin(); bpr != other.end(); ++bpr) {
+      ptr = insert_after(ptr, *bpr);
+    }
   }
 
   template< class Elem >
   List<Elem>::List(List&& other) noexcept {
     fake = other.fake;
-    other.fake = nullptr;
+    other.fake = new Link< Elem >;
+    other.fake->succ = nullptr;
   }
 
   template< class Elem >
@@ -117,12 +120,26 @@ namespace rizatdinov
       return *this;
     }
     clear();
-    if (fake) {
-      delete fake;
-    }
+    delete fake;
     fake = other.fake;
-    other.fake = nullptr;
+    other.fake = new Link< Elem >;
+    other.fake->succ = nullptr;
     return *this;
+  }
+
+  template< class Elem >
+  typename List<Elem>::iterator List<Elem>::before_begin() {
+    return iterator(fake);
+  }
+
+  template< class Elem >
+  typename List<Elem>::const_iterator List<Elem>::before_begin() const {
+    return const_iterator(fake);
+  }
+
+  template< class Elem >
+  typename List<Elem>::const_iterator List<Elem>::cbefore_begin() const {
+    return const_iterator(fake);
   }
 
   template< class Elem >
@@ -188,7 +205,7 @@ namespace rizatdinov
 
   template< class Elem >
   void List<Elem>::clear() {
-    while (begin() != end()) {
+    while (fake->succ) {
       pop_front();
     }
   }
