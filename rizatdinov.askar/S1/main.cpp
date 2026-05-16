@@ -108,6 +108,7 @@ int main() {
     return 1;
   } catch (const std::overflow_error& e) {
     std::cerr << e.what() << std::endl;
+    return 1;
   }
 
   first = true;
