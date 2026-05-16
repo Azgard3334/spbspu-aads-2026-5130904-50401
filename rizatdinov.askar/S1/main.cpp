@@ -61,7 +61,7 @@ int main() {
 
   if (lnum.is_empty()) {
     if (name.length()) {
-      std::cout << name << std::endl;
+      std::cout << name << '\n' << 0 << std::endl;
     } else {
       std::cout << 0 << std::endl;
     }
