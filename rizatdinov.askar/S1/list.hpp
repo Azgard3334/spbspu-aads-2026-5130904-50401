@@ -44,7 +44,7 @@ namespace rizatdinov
     LCIter operator++(int) {
       LCIter temp = *this;
       curr = curr->succ;
-      return temp; 
+      return temp;
     }
     const Elem& operator*() const { return curr->val; }
     bool operator==(const LCIter& b) const { return curr == b.curr; }
