@@ -9,6 +9,7 @@ namespace rizatdinov
     Elem val;
     Link* succ;
   };
+
   template< class Elem > class List;
   template< class Elem >
   class LIter {
@@ -16,26 +17,40 @@ namespace rizatdinov
 
     Link< Elem >* curr;
   public:
-    LIter(Link< Elem >* p) :curr(p) {}
+    LIter(): curr(nullptr) {}
+    LIter(Link< Elem >* p): curr(p) {}
 
     LIter& operator++() { curr = curr->succ; return *this; }
+    LIter operator++(int) {
+      LIter temp = *this;
+      curr = curr->succ;
+      return temp;
+    }
     Elem& operator*() { return curr->val; }
     bool operator==(const LIter& b) const { return curr == b.curr; }
     bool operator!=(const LIter& b) const { return curr != b.curr; }
   };
+
   template< class Elem >
   class LCIter {
     friend class List< Elem >;
 
     const Link< Elem >* curr;
   public:
+    LCIter(): curr(nullptr) {}
     LCIter(const Link< Elem >* p): curr(p) {}
 
     LCIter& operator++() { curr = curr->succ; return *this; }
+    LCIter operator++(int) {
+      LCIter temp = *this;
+      curr = curr->succ;
+      return temp; 
+    }
     const Elem& operator*() const { return curr->val; }
     bool operator==(const LCIter& b) const { return curr == b.curr; }
     bool operator!=(const LCIter& b) const { return curr != b.curr; }
   };
+
   template< class Elem >
   class List {
     Link< Elem >* fake;
@@ -69,6 +84,7 @@ namespace rizatdinov
     void push_front(const Elem& v);
     void pop_front();
 
+    bool is_empty();
     void clear();
   };
 
@@ -201,6 +217,11 @@ namespace rizatdinov
   template< class Elem >
   void List<Elem>::pop_front() {
     erase_after(iterator(fake));
+  }
+
+  template< class Elem >
+  bool List<Elem>::is_empty() {
+    return fake->succ == nullptr;
   }
 
   template< class Elem >
