@@ -56,8 +56,13 @@ int main() {
     return 0;
   }
 
+  bool first = true;
   for (auto i = result.cbegin(); i != result.cend(); ++i) {
-    std::cout << (*i).name << ' ';
+    if (!first) {
+      std::cout << ' ';
+    }
+    first = false;
+    std::cout << (*i).name;
   }
   std::cout << std::endl;
 
@@ -65,13 +70,19 @@ int main() {
   try {
     auto iterator_summ = summ.before_begin();
     for (size_t i = 0; i < size; ++i) {
+      first = true;
       unsigned summa = 0;
       for (auto j = result.begin(); j != result.end(); ++j) {
-        if ((*j).begin != (*j).end) {
-          std::cout << *(*j).begin << ' ';
-          summa += *(*j).begin;
-          ++(*j).begin;
+        if ((*j).begin == (*j).end) {
+          continue;
         }
+        if (!first) {
+          std::cout << ' ';
+        }
+        std::cout << *(*j).begin;
+        first = false;
+        summa += *(*j).begin;
+        ++(*j).begin;
       }
       std::cout << std::endl;
 
@@ -82,8 +93,13 @@ int main() {
     return 1;
   }
 
+  first = true;
   for (auto i = summ.cbegin(); i != summ.cend(); ++i) {
-    std::cout << *i << ' ';
+    if (!first) {
+      std::cout << ' ';
+    }
+    first = false;
+    std::cout << *i;
   }
   std::cout << std::endl;
 
