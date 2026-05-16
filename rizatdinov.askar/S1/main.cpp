@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <limits>
 
 #include "list.hpp"
 
@@ -81,6 +82,9 @@ int main() {
         }
         std::cout << *(*j).begin;
         first = false;
+        if (summa > std::numeric_limits<unsigned>::max()  - *(*j).begin) {
+          throw std::overflow_error("Error: Overflow");
+        }
         summa += *(*j).begin;
         ++(*j).begin;
       }
@@ -91,6 +95,8 @@ int main() {
   } catch (const std::bad_alloc& e) {
     std::cerr << "Error: Failed to allocate memory" << std::endl;
     return 1;
+  } catch (const std::overflow_error& e) {
+    std::cerr << e.what() << std::endl;
   }
 
   first = true;
