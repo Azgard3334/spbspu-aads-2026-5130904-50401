@@ -17,12 +17,12 @@ int main() {
   riz::List<IteratorRange> result;
 
   size_t size = 0;
+  std::string name;
   try {
+    std::cin >> name;
+
     auto begin = lnum.before_begin();
     for (auto i = result.before_begin(); !std::cin.eof(); ++i) {
-      std::string name;
-      std::cin >> name;
-
       IteratorRange range{ name, begin, begin };
 
       size_t len = 0;
@@ -40,10 +40,17 @@ int main() {
 
       if (!std::cin.eof() && std::cin.fail()) {
         std::cin.clear();
+        if (std::cin.peek() == '\n' || std::cin.peek() == ' ') {
+          throw std::overflow_error("Error: overflow");
+        }
+        std::cin >> name;
       }
     }
   } catch (const std::bad_alloc& e) {
-    std::cerr << "Error: Failed to allocate memory" << std::endl;
+    std::cerr << "Error: failed to allocate memory" << std::endl;
+    return 1;
+  } catch (const std::overflow_error& e) {
+    std::cerr << e.what() << std::endl;
     return 1;
   }
 
@@ -53,7 +60,11 @@ int main() {
   }
 
   if (lnum.is_empty()) {
-    std::cout << 0 << std::endl;
+    if (name.length()) {
+      std::cout << name << std::endl;
+    } else {
+      std::cout << 0 << std::endl;
+    }
     return 0;
   }
 
@@ -83,7 +94,7 @@ int main() {
         std::cout << *(*j).begin;
         first = false;
         if (summa > std::numeric_limits<unsigned>::max()  - *(*j).begin) {
-          throw std::overflow_error("Error: Overflow");
+          throw std::overflow_error("Error: overflow");
         }
         summa += *(*j).begin;
         ++(*j).begin;
