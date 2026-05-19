@@ -30,19 +30,18 @@ int main() {
       auto k = lnum.before_begin();
       auto g = summ.before_begin();
       while (std::cin >> num) {
+        auto c = g++;
+        if (g == summ.end()) {
+          g = summ.insert_after(c, 0);
+        }
+
         k = lnum.insert_after(k, num);
-        if (!summ.is_empty() && (*g) > std::numeric_limits<long unsigned>::max() - num) {
+        if ((*g) > std::numeric_limits<long unsigned>::max() - num) {
           throw std::overflow_error("Error: overflow");
         }
 
+        (*g) += num;
         ++size;
-
-        auto c = g++;
-        if (g == summ.end()) {
-          g = summ.insert_after(c, num);
-        } else {
-          (*g) += num;
-        }
      }
 
       if (!std::cin.eof() && std::cin.fail()) {
