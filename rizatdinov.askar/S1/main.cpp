@@ -11,6 +11,7 @@ int main() {
 
   riz::List<std::pair<std::string, riz::List<long unsigned>>> result;
   riz::List<riz::List<long unsigned>::const_iterator> range;
+  riz::List<long unsigned> summ{0};
 
   try {
     auto i = result.before_begin();
@@ -24,13 +25,25 @@ int main() {
 
       riz::List<size_t> lnum;
 
-      long unsigned num = 0;
       size_t size = 0;
+      long unsigned num = 0;
       auto k = lnum.before_begin();
+      auto g = summ.before_begin();
       while (std::cin >> num) {
         k = lnum.insert_after(k, num);
+        if (summ.is_empty() && (*g) > std::numeric_limits<long unsigned>::max() - num) {
+          throw std::overflow_error("Error: overflow");
+        }
+
         ++size;
-      }
+
+        auto c = g++;
+        if (g == summ.end()) {
+          g = summ.insert_after(c, num);
+        } else {
+          (*g) += num;
+        }
+     }
 
       if (!std::cin.eof() && std::cin.fail()) {
         std::cin.clear();
@@ -62,38 +75,20 @@ int main() {
     std::cout << (*i).first;
   }
 
-  riz::List<long unsigned> summ;
+  for (size_t i = 0; i < max_size; ++i) {
+    if (!flag) { std::cout << std::endl; }
 
-  try {
-    auto iterator_summ = summ.before_begin();
-    for (size_t i = 0; i < max_size; ++i) {
-      if (!flag) { std::cout << std::endl; }
-
-      flag = true;
-      long unsigned mmus = 0;
-      for (auto j = range.begin(); j != range.end(); ++j) {
-        if ((*j) == riz::List<long unsigned>::const_iterator(nullptr)) {
-          continue;
-        }
-        if (!flag) {
-          std::cout << ' ';
-        }
-        flag = false;
-        std::cout << *(*j);
-        if (mmus > std::numeric_limits<long unsigned>::max() - *(*j)) {
-          throw std::overflow_error("Error: overflow");
-        }
-        mmus += *((*j)++);
+    flag = true;
+    for (auto j = range.begin(); j != range.end(); ++j) {
+      if ((*j) == riz::List<long unsigned>::const_iterator(nullptr)) {
+        continue;
       }
-
-      iterator_summ = summ.insert_after(iterator_summ, mmus);
+      if (!flag) {
+        std::cout << ' ';
+      }
+      flag = false;
+      std::cout << *((*j)++);
     }
-  } catch (const std::bad_alloc& e) {
-    std::cerr << "Error: failed to allocate memory" << std::endl;
-    return 1;
-  } catch (const std::overflow_error& e) {
-    std::cerr << e.what() << std::endl;
-    return 1;
   }
 
   if (!flag) {

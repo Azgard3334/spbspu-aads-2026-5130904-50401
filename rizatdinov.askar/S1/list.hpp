@@ -1,6 +1,8 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
+#include <iostream>
+
 namespace rizatdinov
 {
   template< class Elem >
@@ -59,6 +61,7 @@ namespace rizatdinov
     using const_iterator = LCIter< Elem >;
 
     List();
+    List(std::initializer_list< Elem > init);
     List(const List& other);
     List(List&& other);
     ~List();
@@ -92,6 +95,17 @@ namespace rizatdinov
   List< Elem >::List() {
     fake = new Link< Elem >;
     fake->succ = nullptr;
+  }
+
+  template< class Elem >
+  List< Elem >::List(std::initializer_list< Elem > init) {
+    fake = new Link< Elem >;
+    fake->succ = nullptr;
+
+    auto it = iterator(fake);
+    for (auto i = init.begin(); i != init.end(); ++i) {
+      it = insert_after(it, *i);
+    }
   }
 
   template< class Elem >
