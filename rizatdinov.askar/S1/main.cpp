@@ -27,7 +27,7 @@ int main() {
       long unsigned num = 0;
       size_t size = 0;
       auto k = lnum.before_begin();
-      while (std::cin >> num) { 
+      while (std::cin >> num) {
         k = lnum.insert_after(k, num);
         ++size;
       }
