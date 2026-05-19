@@ -31,7 +31,7 @@ int main() {
       auto g = summ.before_begin();
       while (std::cin >> num) {
         k = lnum.insert_after(k, num);
-        if (summ.is_empty() && (*g) > std::numeric_limits<long unsigned>::max() - num) {
+        if (!summ.is_empty() && (*g) > std::numeric_limits<long unsigned>::max() - num) {
           throw std::overflow_error("Error: overflow");
         }
 
