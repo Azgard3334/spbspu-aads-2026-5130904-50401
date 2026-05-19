@@ -41,7 +41,7 @@ int main() {
 
       max_size = max_size < size ? size : max_size;
 
-      auto pair = std::pair{ name, lnum };
+      std::pair<std::string, riz::List<long unsigned>> pair{ name, lnum };
       i = result.insert_after(i, pair);
       j = range.insert_after(j, (*i).second.cbegin());
     }
