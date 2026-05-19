@@ -60,11 +60,11 @@ namespace rizatdinov
 
     List();
     List(const List& other);
-    List(List&& other) noexcept;
+    List(List&& other);
     ~List();
 
     List& operator=(const List& other);
-    List& operator=(List&& other) noexcept;
+    List& operator=(List&& other);
 
     iterator before_begin();
     const_iterator before_begin() const;
@@ -105,7 +105,7 @@ namespace rizatdinov
   }
 
   template< class Elem >
-  List<Elem>::List(List&& other) noexcept {
+  List<Elem>::List(List&& other) {
     fake = other.fake;
     other.fake = new Link< Elem >;
     other.fake->succ = nullptr;
@@ -131,7 +131,7 @@ namespace rizatdinov
   }
 
   template< class Elem >
-  List<Elem>& List<Elem>::operator=(List&& other) noexcept {
+  List<Elem>& List<Elem>::operator=(List&& other) {
     if (this == &other) {
       return *this;
     }
