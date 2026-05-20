@@ -57,9 +57,9 @@ int main() {
       i = result.insert_after(i, pair);
       j = range.insert_after(j, (*i).second.cbegin());
     }
-//  } catch (const std::bad_alloc& e) {
-//    std::cerr << "Error: failed to allocate memory" << std::endl;
-//    return 1;
+  } catch (const std::bad_alloc& e) {
+    std::cerr << "Error: failed to allocate memory" << std::endl;
+    return 1;
   } catch (const std::overflow_error& e) {
     std::cerr << e.what() << std::endl;
     return 1;
@@ -104,5 +104,5 @@ int main() {
   }
   std::cout << std::endl;
 
-  return 0;
+  return 1;
 }
