@@ -13,8 +13,6 @@ int main() {
   riz::List<riz::List<long unsigned>::const_iterator> range;
   riz::List<long unsigned> summ{0};
 
-  int log = 0;
-
   try {
     auto i = result.before_begin();
     auto j = range.before_begin();
@@ -49,7 +47,6 @@ int main() {
       if (!std::cin.eof() && std::cin.fail()) {
         std::cin.clear();
         if (std::cin.peek() == '\n' || std::cin.peek() == ' ') {
-          ++log;
           throw std::overflow_error("Error: overflow");
         }
       }
@@ -61,6 +58,7 @@ int main() {
       j = range.insert_after(j, (*i).second.cbegin());
     }
   } catch (const std::bad_alloc& e) {
+    std::cout << "Don't worry\n";
     std::cerr << "Error: failed to allocate memory" << std::endl;
     return 1;
   } catch (const std::overflow_error& e) {
