@@ -13,6 +13,8 @@ int main() {
   riz::List<riz::List<long unsigned>::const_iterator> range;
   riz::List<long unsigned> summ{0};
 
+  int log = 0;
+
   try {
     auto i = result.before_begin();
     auto j = range.before_begin();
@@ -47,6 +49,7 @@ int main() {
       if (!std::cin.eof() && std::cin.fail()) {
         std::cin.clear();
         if (std::cin.peek() == '\n' || std::cin.peek() == ' ') {
+          ++log;
           throw std::overflow_error("Error: overflow");
         }
       }
@@ -62,7 +65,7 @@ int main() {
     return 1;
   } catch (const std::overflow_error& e) {
     std::cerr << e.what() << std::endl;
-    return 1;
+    return log;
   }
 
   bool flag = true;
@@ -104,5 +107,5 @@ int main() {
   }
   std::cout << std::endl;
 
-  return 1;
+  return 0;
 }
