@@ -63,7 +63,7 @@ int main() {
     return 1;
   } catch (const std::overflow_error& e) {
     std::cerr << e.what() << std::endl;
-    return log;
+    return 1;
   }
 
   bool flag = true;
