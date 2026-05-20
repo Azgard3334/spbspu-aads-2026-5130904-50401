@@ -58,10 +58,10 @@ int main() {
       j = range.insert_after(j, (*i).second.cbegin());
     }
   } catch (const std::bad_alloc& e) {
-    std::cout << "Don't worry\n";
     std::cerr << "Error: failed to allocate memory" << std::endl;
     return 1;
   } catch (const std::overflow_error& e) {
+    std::cout << "Hello\n";
     std::cerr << e.what() << std::endl;
     return 1;
   }
