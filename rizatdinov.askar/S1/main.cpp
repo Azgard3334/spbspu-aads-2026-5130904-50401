@@ -37,7 +37,7 @@ int main() {
 
         k = lnum.insert_after(k, num);
         if ((*g) > std::numeric_limits<long unsigned>::max() - num) {
-          throw std::overflow_error("Error: overflow");
+          throw std::overflow_error("Нульзя");
         }
 
         (*g) += num;
@@ -47,7 +47,7 @@ int main() {
       if (!std::cin.eof() && std::cin.fail()) {
         std::cin.clear();
         if (std::cin.peek() == '\n' || std::cin.peek() == ' ') {
-          throw std::overflow_error("Error: overflow");
+          throw std::overflow_error("Нульзя");
         }
       }
 
@@ -61,7 +61,6 @@ int main() {
     std::cerr << "Error: failed to allocate memory" << std::endl;
     return 1;
   } catch (const std::overflow_error& e) {
-    std::cout << "Hello\n";
     std::cerr << e.what() << std::endl;
     return 1;
   }
