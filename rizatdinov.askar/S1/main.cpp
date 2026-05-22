@@ -37,7 +37,7 @@ int main() {
 
         k = lnum.insert_after(k, num);
         if ((*g) > std::numeric_limits<long unsigned>::max() - num) {
-          throw std::overflow_error("Нульзя");
+          throw std::overflow_error("It cannot be summed up");
         }
 
         (*g) += num;
@@ -46,9 +46,6 @@ int main() {
 
       if (!std::cin.eof() && std::cin.fail()) {
         std::cin.clear();
-        if (std::cin.peek() == '\n' || std::cin.peek() == ' ') {
-          throw std::overflow_error("Нульзя");
-        }
       }
 
       max_size = max_size < size ? size : max_size;
@@ -57,9 +54,6 @@ int main() {
       i = result.insert_after(i, pair);
       j = range.insert_after(j, (*i).second.cbegin());
     }
-  } catch (const std::bad_alloc& e) {
-    std::cerr << "Error: failed to allocate memory" << std::endl;
-    return 1;
   } catch (const std::overflow_error& e) {
     std::cerr << e.what() << std::endl;
     return 1;
