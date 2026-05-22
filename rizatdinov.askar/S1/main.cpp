@@ -37,7 +37,7 @@ int main() {
 
         k = lnum.insert_after(k, num);
         if ((*g) > std::numeric_limits<size_t>::max() - num) {
-          throw std::overflow_error("It cannot be summed up");
+          throw std::overflow_error("Error: overflow");
         }
 
         (*g) += num;
@@ -55,7 +55,7 @@ int main() {
       j = range.insert_after(j, (*i).second.cbegin());
     }
   } catch (const std::overflow_error& e) {
-    std::cerr << e.what() << std::endl;
+    std::cerr << e.what() << '\n';
     return 1;
   }
 
@@ -69,7 +69,7 @@ int main() {
   }
 
   for (size_t i = 0; i < max_size; ++i) {
-    if (!flag) { std::cout << std::endl; }
+    if (!flag) { std::cout << '\n'; }
 
     flag = true;
     for (auto j = range.begin(); j != range.end(); ++j) {
@@ -85,7 +85,7 @@ int main() {
   }
 
   if (!flag) {
-    std::cout << std::endl;
+    std::cout << '\n';
   }
   flag = true;
   for (auto i = summ.begin(); i != summ.end(); ++i) {
@@ -95,7 +95,7 @@ int main() {
     flag = false;
     std::cout << *i;
   }
-  std::cout << std::endl;
+  std::cout << '\n';
 
   return 0;
 }
