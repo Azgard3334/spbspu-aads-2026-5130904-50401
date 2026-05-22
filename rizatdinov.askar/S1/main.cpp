@@ -9,9 +9,9 @@ int main() {
 
   size_t max_size = 1;
 
-  riz::List<std::pair<std::string, riz::List<long unsigned>>> result;
-  riz::List<riz::List<long unsigned>::const_iterator> range;
-  riz::List<long unsigned> summ{0};
+  riz::List<std::pair<std::string, riz::List<size_t>>> result;
+  riz::List<riz::List<size_t>::const_iterator> range;
+  riz::List<size_t> summ{0};
 
   try {
     auto i = result.before_begin();
@@ -26,7 +26,7 @@ int main() {
       riz::List<size_t> lnum;
 
       size_t size = 0;
-      long unsigned num = 0;
+      size_t num = 0;
       auto k = lnum.before_begin();
       auto g = summ.before_begin();
       while (std::cin >> num) {
@@ -36,7 +36,7 @@ int main() {
         }
 
         k = lnum.insert_after(k, num);
-        if ((*g) > std::numeric_limits<long unsigned>::max() - num) {
+        if ((*g) > std::numeric_limits<size_t>::max() - num) {
           throw std::overflow_error("It cannot be summed up");
         }
 
@@ -50,7 +50,7 @@ int main() {
 
       max_size = max_size < size ? size : max_size;
 
-      std::pair<std::string, riz::List<long unsigned>> pair{ name, lnum };
+      std::pair<std::string, riz::List<size_t>> pair{ name, lnum };
       i = result.insert_after(i, pair);
       j = range.insert_after(j, (*i).second.cbegin());
     }
@@ -73,7 +73,7 @@ int main() {
 
     flag = true;
     for (auto j = range.begin(); j != range.end(); ++j) {
-      if ((*j) == riz::List<long unsigned>::const_iterator(nullptr)) {
+      if ((*j) == riz::List<size_t>::const_iterator(nullptr)) {
         continue;
       }
       if (!flag) {
@@ -87,7 +87,6 @@ int main() {
   if (!flag) {
     std::cout << std::endl;
   }
-
   flag = true;
   for (auto i = summ.begin(); i != summ.end(); ++i) {
     if (!flag) {
