@@ -57,6 +57,9 @@ int main() {
   } catch (const std::overflow_error& e) {
     std::cerr << e.what() << '\n';
     return 1;
+  } catch (...) {
+    std::cerr << "Unknown exception caught!\n";
+    return 1;
   }
 
   bool flag = true;
