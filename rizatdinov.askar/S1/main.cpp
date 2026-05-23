@@ -59,7 +59,7 @@ int main() {
   } catch (const std::bad_alloc& e) {
     std::cerr << "Error: failed to allocate memory" << std::endl;
     return 1;
-  } 
+  }
 
   bool flag = true;
   for (auto i = result.cbegin(); i != result.cend(); ++i) {
