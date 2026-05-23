@@ -13,6 +13,8 @@ int main() {
   riz::List<riz::List<size_t>::const_iterator> range;
   riz::List<size_t> summ{0};
 
+  bool overflow = false;
+
   try {
     auto i = result.before_begin();
     auto j = range.before_begin();
@@ -37,7 +39,7 @@ int main() {
 
         k = lnum.insert_after(k, num);
         if ((*g) > std::numeric_limits<size_t>::max() - num) {
-          throw std::overflow_error("Error: overflow");
+          overflow = true;
         }
 
         (*g) += num;
@@ -54,13 +56,10 @@ int main() {
       i = result.insert_after(i, pair);
       j = range.insert_after(j, (*i).second.cbegin());
     }
-  } catch (const std::overflow_error& e) {
-    std::cerr << e.what() << '\n';
+  } catch (const std::bad_alloc& e) {
+    std::cerr << "Error: failed to allocate memory" << std::endl;
     return 1;
-  } catch (...) {
-    std::cerr << "Unknown exception caught!\n";
-    return 1;
-  }
+  } 
 
   bool flag = true;
   for (auto i = result.cbegin(); i != result.cend(); ++i) {
@@ -89,6 +88,10 @@ int main() {
 
   if (!flag) {
     std::cout << '\n';
+  }
+  if (overflow) {
+    std::cerr << "Error: overflow\n";
+    return 1;
   }
   flag = true;
   for (auto i = summ.begin(); i != summ.end(); ++i) {
