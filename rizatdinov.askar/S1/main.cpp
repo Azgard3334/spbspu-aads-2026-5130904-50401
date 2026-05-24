@@ -9,15 +9,15 @@ int main() {
 
   size_t max_size = 1;
 
-  riz::List<std::pair<std::string, riz::List<size_t>>> result;
+  riz::List<std::pair<std::string, riz::List<long unsigned>>> result;
   riz::List<riz::List<size_t>::const_iterator> range;
-  riz::List<size_t> summ{0};
+  riz::List<long unsigned> summ{0};
 
   bool overflow = false;
 
   try {
-    auto i = result.before_begin();
-    auto j = range.before_begin();
+    auto result_iterator = result.before_begin();
+    auto range_iterator = range.before_begin();
     while (!std::cin.eof()) {
       std::string name;
       std::cin >> name;
@@ -25,24 +25,24 @@ int main() {
         break;
       }
 
-      riz::List<size_t> lnum;
+      riz::List<long unsigned> lnum;
 
       size_t size = 0;
-      size_t num = 0;
-      auto k = lnum.before_begin();
-      auto g = summ.before_begin();
+      long unsigned num = 0;
+      auto lnum_iterator = lnum.before_begin();
+      auto summ_iterator = summ.before_begin();
       while (std::cin >> num) {
-        auto c = g++;
-        if (g == summ.end()) {
-          g = summ.insert_after(c, 0);
+        auto temp_iterator = summ_iterator++;
+        if (summ_iterator == summ.end()) {
+          summ_iterator = summ.insert_after(temp_iterator, 0);
         }
 
-        k = lnum.insert_after(k, num);
-        if ((*g) > std::numeric_limits<size_t>::max() - num) {
+        lnum_iterator = lnum.insert_after(lnum_iterator, num);
+        if (overflow && (*summ_iterator) > std::numeric_limits<long unsigned>::max() - num) {
           overflow = true;
+        } else {
+          (*summ_iterator) += num;
         }
-
-        (*g) += num;
         ++size;
      }
 
@@ -52,9 +52,9 @@ int main() {
 
       max_size = max_size < size ? size : max_size;
 
-      std::pair<std::string, riz::List<size_t>> pair{ name, lnum };
-      i = result.insert_after(i, pair);
-      j = range.insert_after(j, (*i).second.cbegin());
+      std::pair<std::string, riz::List<long unsigned>> pair{ name, lnum };
+      result_iterator = result.insert_after(result_iterator, pair);
+      range_iterator = range.insert_after(range_iterator, (*result_iterator).second.cbegin());
     }
   } catch (const std::bad_alloc& e) {
     std::cerr << "Error: failed to allocate memory" << std::endl;
@@ -71,11 +71,13 @@ int main() {
   }
 
   for (size_t i = 0; i < max_size; ++i) {
-    if (!flag) { std::cout << '\n'; }
+    if (!flag) {
+      std::cout << '\n';
+    }
 
     flag = true;
     for (auto j = range.begin(); j != range.end(); ++j) {
-      if ((*j) == riz::List<size_t>::const_iterator(nullptr)) {
+      if ((*j) == riz::List<long unsigned>::const_iterator(nullptr)) {
         continue;
       }
       if (!flag) {
@@ -85,10 +87,10 @@ int main() {
       std::cout << *((*j)++);
     }
   }
-
   if (!flag) {
     std::cout << '\n';
   }
+
   if (overflow) {
     std::cerr << "Error: overflow\n";
     return 1;
