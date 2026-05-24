@@ -38,7 +38,7 @@ int main() {
         }
 
         lnum_iterator = lnum.insert_after(lnum_iterator, num);
-        if (overflow && (*summ_iterator) > std::numeric_limits<long unsigned>::max() - num) {
+        if (!overflow && (*summ_iterator) > std::numeric_limits<long unsigned>::max() - num) {
           overflow = true;
         } else {
           (*summ_iterator) += num;
