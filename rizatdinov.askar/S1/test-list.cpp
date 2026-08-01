@@ -238,3 +238,5 @@ BOOST_AUTO_TEST_CASE(self_assignment_test)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+
