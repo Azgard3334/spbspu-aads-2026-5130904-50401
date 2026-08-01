@@ -138,7 +138,7 @@ namespace rizatdinov
     }
     clear();
     iterator ptr = iterator(fake);
-    for (iterator bpr = other.begin(); bpr != other.end(); ++bpr) {
+    for (const_iterator bpr = other.begin(); bpr != other.end(); ++bpr) {
       ptr = insert_after(ptr, *bpr);
     }
     return *this;
