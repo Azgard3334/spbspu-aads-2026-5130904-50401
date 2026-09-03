@@ -1,7 +1,9 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
-#include <iostream>
+#include <initializer_list>
+#include <utility>
+#include <stdexcept>
 
 namespace rizatdinov
 {
@@ -13,9 +15,12 @@ namespace rizatdinov
   };
 
   template< class Elem > class List;
+  template< class Elem > class LCIter;
+
   template< class Elem >
   class LIter {
     friend class List< Elem >;
+    friend class LCIter< Elem >;
 
     Link< Elem >* curr;
   public:
@@ -41,6 +46,7 @@ namespace rizatdinov
   public:
     LCIter(): curr(nullptr) {}
     LCIter(const Link< Elem >* p): curr(p) {}
+    LCIter(const LIter< Elem >& other) : curr(other.curr) {}
 
     LCIter& operator++() { curr = curr->succ; return *this; }
     LCIter operator++(int) {
@@ -82,12 +88,14 @@ namespace rizatdinov
     const_iterator cend() const;
 
     iterator insert_after(iterator p, const Elem& v);
+    iterator insert_after(iterator p, Elem&& v);
     iterator erase_after(iterator p);
 
     void push_front(const Elem& v);
+    void push_front(Elem&& v);
     void pop_front();
 
-    bool is_empty();
+    bool is_empty() const;
     void clear();
   };
 
@@ -133,27 +141,25 @@ namespace rizatdinov
 
   template< class Elem >
   List<Elem>& List<Elem>::operator=(const List& other) {
-    if (this == &other) {
-      return *this;
-    }
-    clear();
-    iterator ptr = iterator(fake);
-    for (const_iterator bpr = other.begin(); bpr != other.end(); ++bpr) {
-      ptr = insert_after(ptr, *bpr);
+    if (this != &other) {
+      clear();
+      iterator ptr = iterator(fake);
+      for (const_iterator bpr = other.begin(); bpr != other.end(); ++bpr) {
+        ptr = insert_after(ptr, *bpr);
+      }
     }
     return *this;
   }
 
   template< class Elem >
   List<Elem>& List<Elem>::operator=(List&& other) {
-    if (this == &other) {
-      return *this;
+    if (this != &other) {
+      clear();
+      delete fake;
+      fake = other.fake;
+      other.fake = new Link< Elem >;
+      other.fake->succ = nullptr;
     }
-    clear();
-    delete fake;
-    fake = other.fake;
-    other.fake = new Link< Elem >;
-    other.fake->succ = nullptr;
     return *this;
   }
 
@@ -205,7 +211,7 @@ namespace rizatdinov
   template< class Elem >
   typename List<Elem>::iterator List<Elem>::insert_after(iterator p, const Elem& v) {
     if (p == end()) {
-      return p;
+      throw std::out_of_range("error: can't insert");
     }
     Link<Elem>* s = new Link<Elem>{v, p.curr->succ};
     p.curr->succ = s;
@@ -213,9 +219,19 @@ namespace rizatdinov
   }
 
   template< class Elem >
+  typename List<Elem>::iterator List<Elem>::insert_after(iterator p, Elem&& v) {
+    if (p == end()) {
+      throw std::out_of_range("error: can't insert");
+    }
+    Link<Elem>* s = new Link<Elem>{std::move(v), p.curr->succ};
+    p.curr->succ = s;
+    return iterator(s);
+  }
+
+  template< class Elem >
   typename List<Elem>::iterator List<Elem>::erase_after(iterator p) {
     if (p == end() || p.curr->succ == nullptr) {
-      return p;
+      throw std::out_of_range("error: can't erase");
     }
     Link<Elem>* s = p.curr->succ;
     p.curr->succ = s->succ;
@@ -225,7 +241,12 @@ namespace rizatdinov
 
   template< class Elem >
   void List<Elem>::push_front(const Elem& v) {
-    insert_after(iterator(fake), v);
+    insert_after(before_begin(), v);
+  }
+
+  template< class Elem >
+  void List<Elem>::push_front(Elem&& v) {
+    insert_after(before_begin(), std::move(v));
   }
 
   template< class Elem >
@@ -234,7 +255,7 @@ namespace rizatdinov
   }
 
   template< class Elem >
-  bool List<Elem>::is_empty() {
+  bool List<Elem>::is_empty() const {
     return fake->succ == nullptr;
   }
 
